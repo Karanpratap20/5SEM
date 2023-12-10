@@ -12,7 +12,7 @@ int main(){
     cout<<"enter the value to predict\n"<<endl;
     cin>>x;
     for(j=2;j<n+1;j++){
-        for(i=0;i<n-j+1;i++){
+        for(i=0;i<n-j+1;i++){   
             a[i][j]=a[i+1][j-1]-a[i][j-1];
         }
     }
