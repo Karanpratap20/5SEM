@@ -62,6 +62,6 @@ int main(){
     
     cout<<"Value forward at "<<x<<" is "<<forward(arr,n,x)<<endl;
     cout<<"Value backward at "<<x<<" is "<<backward(arr,n,x)<<endl;
-
+    
     return 0;
 }
