@@ -2,6 +2,7 @@
     "files.associations": {
         "*.html": "django-html",
         "random": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "cmath": "cpp"
     }
 }
