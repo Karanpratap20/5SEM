@@ -1,52 +1,63 @@
-#include<bits/stdc++.h>
+#include <iostream>
+#include <vector>
+
 using namespace std;
 
-struct rr {
-    int pid, bt, sbt, wt, lst;
-} p[10];
+// Function to implement Round-Robin scheduling
+void roundRobin(vector<int>& processes, int n, vector<int>& burst_time, int quantum) {
+    vector<int> remaining_time(n);
+    vector<int> waiting_time(n), turnaround_time(n);
+    int completion_time = 0;
 
-int main() {
-    int pp = -1, ts, flag, count, ptm = 0, i, n, twt = 0, ttat = 0;
-    cout << "Enter the number of processes: ";
-    cin >> n;
-    cout << "Enter the time slice: ";
-    cin >> ts;
-    for (i = 0; i < n; i++) {
-        cout << "Enter the burst time of process " << i + 1 << ": ";
-        cin >> p[i].bt;
-        p[i].sbt = p[i].bt;
-        p[i].pid = i + 1;
-        p[i].wt = p[i].lst = 0;
-    }
-    while (1) {
-        flag = 0;
-        for (i = 0; i < n; i++) {
-            if (p[i].sbt > 0) {
-                flag = 1;
-                if (p[i].sbt > ts) {
-                    p[i].sbt -= ts;
-                    ptm += ts;
-                }
-                else {
-                    ptm += p[i].sbt;
-                    p[i].sbt = 0;
-                    p[i].wt = ptm - p[i].bt;
+    // Copy burst_time to remaining_time
+    for (int i = 0; i < n; i++)
+        remaining_time[i] = burst_time[i];
+
+    // Round-Robin scheduling
+    while (true) {
+        int all_finished = 1;
+
+        for (int i = 0; i < n; i++) {
+            if (remaining_time[i] > 0) {
+                all_finished = 0;
+
+                if (remaining_time[i] > quantum) {
+                    // Process runs for a time quantum
+                    completion_time += quantum;
+                    remaining_time[i] -= quantum;
+                } else {
+                    // Process completes its execution
+                    completion_time += remaining_time[i];
+                    waiting_time[i] = completion_time - burst_time[i];
+                    remaining_time[i] = 0;
+                    turnaround_time[i] = completion_time;
                 }
             }
         }
-        if (flag == 0)
+
+        if (all_finished)
             break;
     }
 
-    for (i = 0; i < n; i++) {
-        int tat = p[i].bt + p[i].wt;
-        ttat += tat;
-        twt += p[i].wt;
-        cout << "Process " << p[i].pid << " - Turnaround Time: " << tat << ", Waiting Time: " << p[i].wt << endl;
+    // Print Gantt chart
+    cout << "\nGantt Chart:\n";
+    for (int i = 0; i < n; i++) {
+        cout << turnaround_time[i] - burst_time[i] << " - P" << processes[i] << " ";
+        if (i < n - 1)
+            cout << "| ";
     }
 
-    cout << "Average Turnaround Time: " << (float)ttat / n << endl;
-    cout << "Average Waiting Time: " << (float)twt / n << endl;
+    cout << "\n";
+}
+
+int main() {
+    // Example processes and burst times
+    vector<int> processes = {1, 2, 3, 4};
+    int n = processes.size();
+    vector<int> burst_time = {10, 5, 8, 12};
+    int quantum = 2;
+
+    roundRobin(processes, n, burst_time, quantum);
 
     return 0;
 }
